@@ -4,9 +4,14 @@
 
 .currently-reading .currently-reading-text { 
     font-size: 24px;
+    font-weight: bold;
 }
 
 .currently-reading .currently-reading-text .currentword { 
     font-size: 24px;
     color: red;
+}
+
+.finished-reading {
+    color: grey;
 }
