@@ -8,7 +8,7 @@ module.exports = [
   },
   {
     content:
-      "<speak><s>This is a sentence.</s><s>This is another sentence</s>Some more text</speak>",
+      "<speak><s>This is a sentence.</s><s>This is another sentence</s><s>Some more text</s></speak>",
   },
   {
     content:
