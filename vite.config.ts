@@ -11,6 +11,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "happy-dom",
+    silent: false,
     outputFile: {
       junit: "test-results.xml",
     },

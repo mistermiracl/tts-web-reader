@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { PlayingState, SpeechEngine, createSpeechEngine } from './speech';
+import { useUpdateEffect } from './useUpdateEffect';
 
 /*
   @description
@@ -48,7 +49,7 @@ const useSpeech = (sentences?: Array<string>) => {
     engine.current.cancel();
   };
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     reset();
   }, [sentences]);
 
