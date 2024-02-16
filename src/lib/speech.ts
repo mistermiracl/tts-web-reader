@@ -44,6 +44,7 @@ const createSpeechEngine = (options: SpeechEngineOptions) => {
     // set up listeners
     utterance.onboundary = (e) => options.onBoundary(e);
     utterance.onend = (e) => {
+      console.log('ended');
       options.onStateUpdate("ended");
       options.onEnd(e);
     };

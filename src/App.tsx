@@ -13,10 +13,10 @@ function App() {
     <div className="App">
       <h1>Text to speech</h1>
       <div>
-        <CurrentlyReading sentences={sentences} currentSentenceIdx={currentSentenceIdx} currentWordRange={currentWordRange} />
+        <CurrentlyReading sentences={sentences} currentSentenceIdx={currentSentenceIdx} currentWordRange={currentWordRange} playbackState={playbackState} />
       </div>
       <div>
-        <Controls play={play} pause={pause} loadNewContent={refresh} state={playbackState} />
+        <Controls play={play} pause={pause} loadNewContent={refresh} playbackState={playbackState} />
       </div>
     </div>
   );

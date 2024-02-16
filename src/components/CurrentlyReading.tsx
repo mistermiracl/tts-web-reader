@@ -7,32 +7,56 @@
  *
  * See example.gif for an example of how the component should look like, feel free to style it however you want as long as the testID exists
  */
-export const CurrentlyReading = ({
-  currentWordRange,
-  currentSentenceIdx,
-  sentences,
-}: {
+
+import { PlayingState } from '../lib/speech';
+
+type CurrentSentenceProps = {
+  sentence?: string;
+  wordRange: [number, number];
+  playbackState: PlayingState;
+}
+
+const CurrentSentence = ({ sentence, wordRange, playbackState }: CurrentSentenceProps) => {
+  if (playbackState === 'ended' || !sentence) {
+    return <span className="finished-reading">Read all sentences</span>;
+  }
+
+  const sentenceFirstHalf = sentence.substring(0, wordRange[0]);
+  const sentenceCurrentWord = sentence.substring(wordRange[0], wordRange[1]);
+  const sentenceSecondHalf = sentence.substring(wordRange[1]);
+  return (
+    <>
+      <span>{sentenceFirstHalf}</span>
+      <span className="currentword" data-testid="current-word">{sentenceCurrentWord}</span>
+      <span>{sentenceSecondHalf}</span>
+    </>
+  );
+}
+
+type CurrentlyReadingProps = {
   currentWordRange: [number, number];
   currentSentenceIdx: number;
   sentences?: string[];
-}) => {
+  playbackState: PlayingState;
+};
+
+export const CurrentlyReading = ({ currentWordRange, currentSentenceIdx, sentences, playbackState }: CurrentlyReadingProps) => {
   if (!sentences) {
     return <div>No sentences loaded</div>
   }
   return (
     <div className="currently-reading" data-testid="currently-reading">
       <p className="currently-reading-text" data-testid="current-sentence">
-        {!sentences[currentSentenceIdx] && <span className="finished-reading">Read all sentences</span>}
-        {
-          sentences[currentSentenceIdx] &&
-          <>
-            <span>{sentences[currentSentenceIdx].substring(0, currentWordRange[0])}</span>
-            <span className="currentword" data-testid="current-word">{sentences[currentSentenceIdx].substring(currentWordRange[0], currentWordRange[1])}</span>
-            <span>{sentences[currentSentenceIdx].substring(currentWordRange[1])}</span>
-          </>
-        }
+        <CurrentSentence sentence={sentences[currentSentenceIdx]} wordRange={currentWordRange} playbackState={playbackState} />
       </p>
-      <p>{sentences.join('\n')}</p>
+      <p>
+        {sentences.map(sen => (
+          <span key={sen}>
+            {sen}
+            <br />
+          </span>
+        ))}
+      </p>
     </div>
   );
 };

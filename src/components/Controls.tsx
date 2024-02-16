@@ -7,24 +7,24 @@ import { PlayingState } from '../lib/speech';
  * - A button with text "Pause" if the player is playing
  * - A button with text "Load new content" that loads new content from the API
  */
+type ControlsProps = {
+  play: () => void;
+  pause: () => void;
+  loadNewContent: () => void;
+  playbackState: PlayingState;
+};
+
 export const Controls = ({
   play,
   pause,
   loadNewContent,
-  state,
-  disabled
-}: {
-  play: () => void;
-  pause: () => void;
-  loadNewContent: () => void;
-  state: PlayingState;
-  disabled?: boolean;
-}) => {
+  playbackState
+}: ControlsProps) => {
   return (
     <div>
-      {state !== 'playing' && <button onClick={play} disabled={disabled}>Play</button>}
-      {state === 'playing' && <button onClick={pause} disabled={disabled}>Pause</button>}
-      <button onClick={loadNewContent}>Load</button>
+      {playbackState !== 'playing' && <button onClick={play} disabled={playbackState === 'ended'}>Play</button>}
+      {playbackState === 'playing' && <button onClick={pause}>Pause</button>}
+      <button onClick={loadNewContent}>Load new content</button>
     </div>
   );
 };
