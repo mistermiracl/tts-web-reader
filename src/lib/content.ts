@@ -30,8 +30,16 @@ const parseContentIntoSentences = (content: string): string[] => {
   // const parser = new DOMParser().parseFromString(content, 'text/xml');
   // const sentences = Array.from(parser.querySelector('speak')!.querySelectorAll('s')).map(sEl => sEl.textContent!);
   // const regex = /.{0,}<s>(.{0,})<\/s>.{0,}/g;
+  if (!content) throw new ReferenceError('content is empty');
+  
   const regex = /<s>([a-zA-Z0-9_\- .,!?"';]+)<\/s>/g;
-  return [...content.matchAll(regex)].map(match => match[1]);
+  const matches = [...content.matchAll(regex)];
+  const sentences = matches.map(match => match[1]);
+  if (!sentences.length || sentences.every(sen => !sen)) {
+    throw new Error('Invalid SSML');
+  }
+
+  return sentences;
 };
 
 export { fetchContent, parseContentIntoSentences };
