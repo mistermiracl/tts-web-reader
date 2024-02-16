@@ -27,9 +27,11 @@ const fetchContent = async (signal?: AbortSignal): Promise<string> => {
 const parseContentIntoSentences = (content: string): string[] => {
   // TODO: refactor this after testing
   // TODO: replace dom parser with regex
-  const parser = new DOMParser().parseFromString(content, 'text/xml');
-  const sentences = Array.from(parser.querySelector('speak')!.querySelectorAll('s')).map(sEl => sEl.textContent!);
-  return sentences;
+  // const parser = new DOMParser().parseFromString(content, 'text/xml');
+  // const sentences = Array.from(parser.querySelector('speak')!.querySelectorAll('s')).map(sEl => sEl.textContent!);
+  // const regex = /.{0,}<s>(.{0,})<\/s>.{0,}/g;
+  const regex = /<s>([a-zA-Z0-9_\- .,!?"';]+)<\/s>/g;
+  return [...content.matchAll(regex)].map(match => match[1]);
 };
 
 export { fetchContent, parseContentIntoSentences };
