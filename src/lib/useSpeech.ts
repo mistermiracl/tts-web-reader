@@ -16,38 +16,54 @@ const useSpeech = (sentences?: Array<string>) => {
 
   const [playbackState, setPlaybackState] = useState<PlayingState>("paused");
 
-  const engine = useRef<SpeechEngine>();
+  const engine = useRef<SpeechEngine>(createSpeechEngine({
+    onStateUpdate: (state) => {
+      if (state === 'ended') {
+        setPlaybackState('paused');
+      } else {
+        setPlaybackState(state);
+      }
+    },
+    onBoundary: (e) => {
+      const nextSpaceIndex = e.utterance.text.indexOf(" ", e.charIndex);
+      const endWordIndex = nextSpaceIndex > -1 ? nextSpaceIndex : e.utterance.text.length;
+      setCurrentWordRange([e.charIndex, endWordIndex]);
+    },
+    onEnd: () => {
+      setCurrentSentenceIdx(prevIdx => prevIdx + 1);
+      setCurrentWordRange([0, 0]);
+    }
+  }));
 
   const play = () => {
-    engine.current?.play();
+    engine.current.play();
   };
   const pause = () => {
-    engine.current?.pause()
+    engine.current.pause()
+  };
+
+  const reset = () => {
+    setCurrentSentenceIdx(0);
+    setCurrentWordRange([0, 0]);
+    engine.current.cancel();
   };
 
   useEffect(() => {
-    if (sentences) {
-      engine.current = createSpeechEngine({
-        onStateUpdate: (state) => setPlaybackState(state),
-        onBoundary: (e) => {
-          const endWordIndex = e.utterance.text.indexOf(" ", e.charIndex);
-          setCurrentWordRange([e.charIndex, endWordIndex > -1 ? endWordIndex : e.utterance.text.length])
-        },
-        onEnd: () => {
-          setCurrentSentenceIdx(prevIdx => prevIdx + 1);
-          setCurrentWordRange([0, 0]);
-        }
-      });
-      setCurrentSentenceIdx(0);
-      setCurrentWordRange([0, 0]);
-    }
+    reset();
   }, [sentences]);
 
   useEffect(() => {
-    if (sentences) {
-      engine.current?.load(sentences[currentSentenceIdx]);
+    // set state to ended when all sentences have been spoken
+    if (currentSentenceIdx === sentences?.length) {
+      setPlaybackState('ended');
     }
-  }, [sentences, currentSentenceIdx])
+  }, [currentSentenceIdx]);
+
+  useEffect(() => {
+    if (sentences && sentences[currentSentenceIdx]) {
+      engine.current.load(sentences[currentSentenceIdx]);
+    }
+  }, [sentences, currentSentenceIdx]);
 
   return {
     currentSentenceIdx,
