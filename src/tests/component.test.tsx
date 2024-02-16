@@ -33,6 +33,7 @@ describe("Currently Reading Component", () => {
         currentWordRange={wordRange}
         currentSentenceIdx={0}
         sentences={sentences}
+        playbackState="playing"
       />
     );
 
@@ -52,6 +53,7 @@ describe("Currently Reading Component", () => {
         currentWordRange={wordRange}
         currentSentenceIdx={0}
         sentences={sentences}
+        playbackState="playing"
       />
     );
 
@@ -65,6 +67,7 @@ describe("Currently Reading Component", () => {
         currentWordRange={wordRange}
         currentSentenceIdx={1}
         sentences={sentences}
+        playbackState="playing"
       />
     );
 
@@ -80,6 +83,7 @@ describe("Currently Reading Component", () => {
         currentWordRange={wordRange}
         currentSentenceIdx={0}
         sentences={sentences}
+        playbackState="playing"
       />
     );
     const currentWord = screen.getByTestId("current-word");
@@ -91,6 +95,7 @@ describe("Currently Reading Component", () => {
         currentWordRange={[5, 7]}
         currentSentenceIdx={1}
         sentences={sentences}
+        playbackState="playing"
       />
     );
     const updatedWord = screen.getByTestId("current-word");
@@ -106,7 +111,7 @@ describe("Controls Component", () => {
         play={() => {}}
         pause={() => {}}
         loadNewContent={() => {}}
-        state="paused"
+        playbackState="paused"
       />
     );
 
@@ -118,7 +123,7 @@ describe("Controls Component", () => {
         play={() => {}}
         pause={() => {}}
         loadNewContent={() => {}}
-        state="playing"
+        playbackState="playing"
       />
     );
 
@@ -132,7 +137,7 @@ describe("Controls Component", () => {
         play={play}
         pause={() => {}}
         loadNewContent={() => {}}
-        state="paused"
+        playbackState="paused"
       />
     );
 
@@ -147,7 +152,7 @@ describe("Controls Component", () => {
         play={() => {}}
         pause={() => {}}
         loadNewContent={loadNewContent}
-        state="paused"
+        playbackState="paused"
       />
     );
 
@@ -163,7 +168,7 @@ describe("Controls Component", () => {
         play={() => {}}
         pause={pause}
         loadNewContent={() => {}}
-        state="playing"
+        playbackState="playing"
       />
     );
 
