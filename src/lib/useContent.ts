@@ -4,10 +4,10 @@ import { fetchContent, parseContentIntoSentences } from './content';
 export function useContent(): [string[] | undefined, boolean, () => void] {
   const [content, setContent] = useState<string[]>();
   const [loading, setLoading] = useState(false);
-  const [flag, setFlag] = useState(false);
+  const [refreshFlag, setRefreshFlag] = useState(false);
 
   const refresh = () => {
-    setFlag(!flag);
+    setRefreshFlag(!refreshFlag);
   }
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export function useContent(): [string[] | undefined, boolean, () => void] {
     }
     getContent();
     return () => abortCtrl.abort();
-  }, [flag]);
+  }, [refreshFlag]);
 
   return [content, loading, refresh];
 }
