@@ -25,19 +25,22 @@ const fetchContent = async (signal?: AbortSignal): Promise<string> => {
  * Avoid using DOMParser for implementing this function.
  */
 const parseContentIntoSentences = (content: string): string[] => {
-  // TODO: refactor this after testing
-  // TODO: replace dom parser with regex
-  // const parser = new DOMParser().parseFromString(content, 'text/xml');
-  // const sentences = Array.from(parser.querySelector('speak')!.querySelectorAll('s')).map(sEl => sEl.textContent!);
-  // const regex = /.{0,}<s>(.{0,})<\/s>.{0,}/g;
   if (!content) throw new ReferenceError('content is empty');
   
-  const regex = /<s>([a-zA-Z0-9_\- .,!?"';]+)<\/s>/g;
-  const matches = [...content.matchAll(regex)];
-  const sentences = matches.map(match => match[1]);
-  if (!sentences.length || sentences.every(sen => !sen)) {
+  // check if <speak></speak> is the root element
+  const speakRegex = /^<speak>.+<\/speak>$/;
+  if (!speakRegex.test(content)) {
     throw new Error('Invalid SSML');
   }
+
+  // check if there are any <s></s> tags either between <p></p> tags or alone, + sign ensures that the capture group exists
+  const senRegex = /<p><s>([a-zA-Z0-9_\- .,!?"';]+)<\/s><\/p>|<s>([a-zA-Z0-9_\- .,!?"';]+)<\/s>/g;
+  const senMatches = [...content.matchAll(senRegex)];
+  if (!senMatches.length) {
+    throw new Error('Invalid SSML');
+  }
+  // check if get either capture group exists
+  const sentences = senMatches.map(match => match[1] || match[2]);
 
   return sentences;
 };
