@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     content: "<speak><s>This is a sentence.</s></speak>",
   },
