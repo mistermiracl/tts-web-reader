@@ -8,6 +8,7 @@
  * See example.gif for an example of how the component should look like, feel free to style it however you want as long as the testID exists
  */
 
+import { Fragment } from 'react';
 import { PlayingState } from '../lib/speech';
 
 type CurrentSentenceProps = {
@@ -18,7 +19,7 @@ type CurrentSentenceProps = {
 
 const CurrentSentence = ({ sentence, wordRange, playbackState }: CurrentSentenceProps) => {
   if (playbackState === 'ended' || !sentence) {
-    return <span className="finished-reading">Read all sentences</span>;
+    return <span className="read">Read all sentences</span>;
   }
 
   const sentenceFirstHalf = sentence.substring(0, wordRange[0]);
@@ -27,7 +28,7 @@ const CurrentSentence = ({ sentence, wordRange, playbackState }: CurrentSentence
   return (
     <>
       <span>{sentenceFirstHalf}</span>
-      <span className="currentword" data-testid="current-word">{sentenceCurrentWord}</span>
+      <span className="current-word" data-testid="current-word">{sentenceCurrentWord}</span>
       <span>{sentenceSecondHalf}</span>
     </>
   );
@@ -51,10 +52,10 @@ export const CurrentlyReading = ({ currentWordRange, currentSentenceIdx, sentenc
       </p>
       <p>
         {sentences.map(sen => (
-          <span key={sen}>
+          <Fragment key={sen}>
             {sen}
             <br />
-          </span>
+          </Fragment>
         ))}
       </p>
     </div>

@@ -1,17 +1,17 @@
-.currently-reading { 
-
+* {
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.currently-reading .currently-reading-text { 
+.currently-reading {
+}
+.currently-reading .currently-reading-text {
     font-size: 24px;
     font-weight: bold;
 }
-
-.currently-reading .currently-reading-text .currentword { 
+.currently-reading .currently-reading-text .current-word {
     font-size: 24px;
     color: red;
 }
-
-.finished-reading {
+.currently-reading .currently-reading-text .read {
     color: grey;
 }

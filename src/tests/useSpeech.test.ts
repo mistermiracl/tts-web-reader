@@ -5,7 +5,6 @@ import {
 } from 'vitest';
 
 import {
-  act,
   renderHook,
 } from '@testing-library/react';
 
