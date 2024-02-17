@@ -37,7 +37,7 @@ const testCases = [
   },
   {
     name: "Parses correctly formatted ssml and ignores P tags",
-    content: `<speak><p><s>This is a sentence.</s><s>This is another sentence.</s><p><speak>`,
+    content: `<speak><p><s>This is a sentence.</s><s>This is another sentence.</s><p></speak>`,
     expected: ["This is a sentence.", "This is another sentence."],
   },
 ];
@@ -45,7 +45,7 @@ const testCases = [
 describe("parseContent Test Suite", () => {
   it("returns an array of sentences", () => {
     const sentences = parseContentIntoSentences(testCases[0].content);
-    expectTypeOf(sentences).toBeArray;
+    expectTypeOf(sentences).toBeArray();
   });
 
   it("throws an error when ssml is invalid i.e does not start with <speak>", () => {
