@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { PlayingState, SpeechEngine, createSpeechEngine } from './speech';
+import { PlaybackState, SpeechEngine, createSpeechEngine } from './speech';
 import { useUpdateEffect } from './useUpdateEffect';
 
 /*
@@ -15,12 +15,12 @@ const useSpeech = (sentences?: Array<string>) => {
   const [currentSentenceIdx, setCurrentSentenceIdx] = useState(0);
   const [currentWordRange, setCurrentWordRange] = useState<[number, number]>([0, 0]);
 
-  const [playbackState, setPlaybackState] = useState<PlayingState>("paused");
+  const [playbackState, setPlaybackState] = useState<PlaybackState>(PlaybackState.Paused);
 
   const engine = useRef<SpeechEngine>(createSpeechEngine({
     onStateUpdate: (state) => {
       if (state === 'ended') {
-        setPlaybackState('paused');
+        setPlaybackState(PlaybackState.Paused);
       } else {
         setPlaybackState(state);
       }
@@ -40,7 +40,7 @@ const useSpeech = (sentences?: Array<string>) => {
     engine.current.play();
   };
   const pause = () => {
-    engine.current.pause()
+    engine.current.pause();
   };
 
   const reset = () => {
@@ -56,7 +56,7 @@ const useSpeech = (sentences?: Array<string>) => {
   useEffect(() => {
     // set state to ended when all sentences have been spoken
     if (currentSentenceIdx === sentences?.length) {
-      setPlaybackState('ended');
+      setPlaybackState(PlaybackState.Ended);
     }
   }, [currentSentenceIdx]);
 

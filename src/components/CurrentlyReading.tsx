@@ -9,16 +9,16 @@
  */
 
 import { Fragment } from 'react';
-import { PlayingState } from '../lib/speech';
+import { PlaybackState } from '../lib/speech';
 
 type CurrentSentenceProps = {
   sentence?: string;
   wordRange: [number, number];
-  playbackState: PlayingState;
+  playbackState: PlaybackState;
 }
 
 const CurrentSentence = ({ sentence, wordRange, playbackState }: CurrentSentenceProps) => {
-  if (playbackState === 'ended' || !sentence) {
+  if (playbackState === PlaybackState.Ended || !sentence) {
     return <span className="read">Read all sentences</span>;
   }
 
@@ -38,7 +38,7 @@ type CurrentlyReadingProps = {
   currentWordRange: [number, number];
   currentSentenceIdx: number;
   sentences?: string[];
-  playbackState: PlayingState;
+  playbackState: PlaybackState;
 };
 
 export const CurrentlyReading = ({ currentWordRange, currentSentenceIdx, sentences, playbackState }: CurrentlyReadingProps) => {

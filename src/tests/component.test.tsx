@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   afterEach,
   describe,
@@ -16,6 +14,7 @@ import {
 
 import { Controls } from '../components/Controls';
 import { CurrentlyReading } from '../components/CurrentlyReading';
+import { PlaybackState } from '../lib/speech';
 
 const sentences = [
   "This is a sentence.",
@@ -33,7 +32,7 @@ describe("Currently Reading Component", () => {
         currentWordRange={wordRange}
         currentSentenceIdx={0}
         sentences={sentences}
-        playbackState="playing"
+        playbackState={PlaybackState.Playing}
       />
     );
 
@@ -53,7 +52,7 @@ describe("Currently Reading Component", () => {
         currentWordRange={wordRange}
         currentSentenceIdx={0}
         sentences={sentences}
-        playbackState="playing"
+        playbackState={PlaybackState.Playing}
       />
     );
 
@@ -67,7 +66,7 @@ describe("Currently Reading Component", () => {
         currentWordRange={wordRange}
         currentSentenceIdx={1}
         sentences={sentences}
-        playbackState="playing"
+        playbackState={PlaybackState.Playing}
       />
     );
 
@@ -83,7 +82,7 @@ describe("Currently Reading Component", () => {
         currentWordRange={wordRange}
         currentSentenceIdx={0}
         sentences={sentences}
-        playbackState="playing"
+        playbackState={PlaybackState.Playing}
       />
     );
     const currentWord = screen.getByTestId("current-word");
@@ -95,7 +94,7 @@ describe("Currently Reading Component", () => {
         currentWordRange={[5, 7]}
         currentSentenceIdx={1}
         sentences={sentences}
-        playbackState="playing"
+        playbackState={PlaybackState.Playing}
       />
     );
     const updatedWord = screen.getByTestId("current-word");
@@ -111,7 +110,7 @@ describe("Controls Component", () => {
         play={() => {}}
         pause={() => {}}
         loadNewContent={() => {}}
-        playbackState="paused"
+        playbackState={PlaybackState.Paused}
       />
     );
 
@@ -123,7 +122,7 @@ describe("Controls Component", () => {
         play={() => {}}
         pause={() => {}}
         loadNewContent={() => {}}
-        playbackState="playing"
+        playbackState={PlaybackState.Playing}
       />
     );
 
@@ -137,7 +136,7 @@ describe("Controls Component", () => {
         play={play}
         pause={() => {}}
         loadNewContent={() => {}}
-        playbackState="paused"
+        playbackState={PlaybackState.Paused}
       />
     );
 
@@ -152,7 +151,7 @@ describe("Controls Component", () => {
         play={() => {}}
         pause={() => {}}
         loadNewContent={loadNewContent}
-        playbackState="paused"
+        playbackState={PlaybackState.Paused}
       />
     );
 
@@ -168,7 +167,7 @@ describe("Controls Component", () => {
         play={() => {}}
         pause={pause}
         loadNewContent={() => {}}
-        playbackState="playing"
+        playbackState={PlaybackState.Playing}
       />
     );
 

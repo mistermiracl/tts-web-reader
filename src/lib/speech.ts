@@ -1,17 +1,23 @@
 export type SpeechEngineOptions = {
   onBoundary: (e: SpeechSynthesisEvent) => void;
   onEnd: (e: SpeechSynthesisEvent) => void;
-  onStateUpdate: (state: PlayingState) => void;
+  onStateUpdate: (state: PlaybackState) => void;
 };
 
-export type PlayingState = "initialized" | "playing" | "paused" | "ended";
+export enum PlaybackState {
+  Initialized = "initialized",
+  Playing = "playing",
+  Paused = "paused",
+  Ended = "ended"
+}
 
 export type SpeechEngineState = {
   utterance: SpeechSynthesisUtterance | null;
+  playbackState: PlaybackState;
   config: {
     rate: number;
     volume: number;
-    voice: SpeechSynthesisVoice;
+    voice?: SpeechSynthesisVoice;
   };
 };
 
@@ -25,27 +31,51 @@ export type SpeechEngine = ReturnType<typeof createSpeechEngine>;
 const createSpeechEngine = (options: SpeechEngineOptions) => {
   const state: SpeechEngineState = {
     utterance: null,
+    playbackState: PlaybackState.Paused,
     config: {
       rate: 1,
-      volume: 1,
-      voice: window.speechSynthesis.getVoices()[0],
+      volume: 1
     },
   };
 
-  window.speechSynthesis.onvoiceschanged = (e) => {
-    state.config.voice = speechSynthesis.getVoices()[0];
+  const getVoices = (): Promise<SpeechSynthesisVoice[]> => {
+    return new Promise(solve => {
+      const voices = speechSynthesis.getVoices();
+      if (voices) {
+        solve(voices);
+      } else {
+        window.speechSynthesis.onvoiceschanged = () => {
+          solve(speechSynthesis.getVoices());
+          window.speechSynthesis.onvoiceschanged = null;
+        };
+      }
+    });
   };
 
-  const load = (text: string) => {
+  const loadVoice = async (): Promise<void> => {
+    const voices = await getVoices();
+    state.config.voice = voices[0];
+  };
+
+  const updatePlaybackState = (playbackState: PlaybackState) => {
+    state.playbackState = playbackState;
+    options.onStateUpdate(playbackState);
+  }
+
+  const load = async (text: string): Promise<void> => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = state.config.rate;
     utterance.volume = state.config.volume;
-    utterance.voice = state.config.voice;
+    // voice needs to be explicitely set, otherwise onboundary won't fire
+    if (!state.config.voice) {
+      await loadVoice();
+    }
+    utterance.voice = state.config.voice!;
     // set up listeners
     utterance.onboundary = (e) => options.onBoundary(e);
     utterance.onend = (e) => {
       console.log('ended');
-      options.onStateUpdate("ended");
+      updatePlaybackState(PlaybackState.Ended);
       options.onEnd(e);
     };
 
@@ -55,21 +85,27 @@ const createSpeechEngine = (options: SpeechEngineOptions) => {
 
   const play = () => {
     if (!state.utterance) throw new Error("No active utterance found to play");
-    state.utterance.onstart = () => {
-      console.log('waiting for onstart')
-      options.onStateUpdate("playing");
-    };
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(state.utterance);
+
+    if (state.playbackState === PlaybackState.Paused) {
+      window.speechSynthesis.resume();
+      updatePlaybackState(PlaybackState.Playing);
+    } else {
+      state.utterance.onstart = () => {
+        console.log('started')
+        updatePlaybackState(PlaybackState.Playing);
+      };
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(state.utterance);
+    }
   };
 
   const pause = () => {
-    options.onStateUpdate("paused");
     window.speechSynthesis.pause();
+    updatePlaybackState(PlaybackState.Paused);
   };
   const cancel = () => {
-    options.onStateUpdate("initialized");
     window.speechSynthesis.cancel();
+    updatePlaybackState(PlaybackState.Initialized);
   };
 
   return {

@@ -8,6 +8,7 @@ export function useUpdateEffect(effect: EffectCallback, deps?: DependencyList) {
       return effect();
     }
   }, deps);
+  // use effect with cleaup neeed to circumvent react strict mode
   useEffect(() => {
     mounted.current = true;
     return () => {

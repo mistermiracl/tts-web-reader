@@ -1,4 +1,4 @@
-import { PlayingState } from '../lib/speech';
+import { PlaybackState } from '../lib/speech';
 
 /*
  * Implement a component that provides basic UI options such as playing, pausing and loading new content
@@ -11,7 +11,7 @@ type ControlsProps = {
   play: () => void;
   pause: () => void;
   loadNewContent: () => void;
-  playbackState: PlayingState;
+  playbackState: PlaybackState;
 };
 
 export const Controls = ({
@@ -22,8 +22,8 @@ export const Controls = ({
 }: ControlsProps) => {
   return (
     <div>
-      {playbackState !== 'playing' && <button onClick={play} disabled={playbackState === 'ended'}>Play</button>}
-      {playbackState === 'playing' && <button onClick={pause}>Pause</button>}
+      {playbackState !== PlaybackState.Playing && <button onClick={play} disabled={playbackState === PlaybackState.Ended}>Play</button>}
+      {playbackState === PlaybackState.Playing && <button onClick={pause}>Pause</button>}
       <button onClick={loadNewContent}>Load new content</button>
     </div>
   );
