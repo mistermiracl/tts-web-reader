@@ -1,4 +1,4 @@
-import { setupWorker } from 'msw/browser';
+import { setupServer } from 'msw/node';
 import {
   beforeAll,
   describe,
@@ -9,12 +9,12 @@ import {
 import { fetchContent } from '../lib/content';
 import { handlers } from './mocks/handlers';
 
-const server = setupWorker();
+const server = setupServer();
 
 describe("fetchContent Test Suite", () => {
   beforeAll(() => {
-    server.start({ onUnhandledRequest: "error" });
-    return () => server.stop();
+    server.listen({ onUnhandledRequest: 'error' });
+    return () => server.close();
   });
 
   it("fetches content from url and returns the content as string", async () => {
